@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: db5a467507b1c2843a5359bb925b9b8a
+  - enabled: 1
+    path: Assets/Scenes/Search/LinearSearchScene.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Sort/MergeSortScene.unity
+    guid: 0d8d1ac621e53514883ff575c10ea81b
+  - enabled: 1
+    path: Assets/Scenes/Sort/TreeSort.unity
+    guid: c4c1b3763493ebf48a1994e633c9ecb4
+  - enabled: 1
+    path: Assets/Scenes/Sort/RadixSort.unity
+    guid: 0d8597aaf32e9fe4e91983bf37438b83
+  - enabled: 1
+    path: Assets/Scenes/Search/TreeSearch.unity
+    guid: 9e5837789d9fd7d4b88f159007a7e7fb
+  - enabled: 1
+    path: Assets/Scenes/Search/JumpSearch.unity
+    guid: 2dfaf62c4080e8049b7fd3761b5625b1
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_UseUCBPForAssetBundles: 0
