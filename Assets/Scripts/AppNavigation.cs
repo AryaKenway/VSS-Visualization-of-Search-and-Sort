@@ -8,7 +8,6 @@ public class AppNavigation : MonoBehaviour
     public GameObject sortingPanel;
     public GameObject searchingPanel;
 
-    // ---------------- MAIN MENU ----------------
 
     public void ShowSortingAlgorithms()
     {
@@ -31,7 +30,6 @@ public class AppNavigation : MonoBehaviour
         mainMenuPanel.SetActive(true);
     }
 
-    // ---------------- SORTING SCENES ----------------
 
     public void LoadMergeSort()
     {
@@ -48,7 +46,6 @@ public class AppNavigation : MonoBehaviour
         SceneManager.LoadScene("RadixSort");
     }
 
-    // ---------------- SEARCHING SCENES ----------------
 
     public void LoadLinearSearch()
     {

@@ -58,7 +58,7 @@ public class JumpSearchVisualizer : MonoBehaviour
 
     IEnumerator JumpSearchCoroutine(int target)
     {
-        // Jump Search requires sorted array
+       
         System.Array.Sort(data);
         RegenerateSortedVisuals();
 
@@ -71,7 +71,6 @@ public class JumpSearchVisualizer : MonoBehaviour
         int prev = 0;
         float maxVal = 80f;
 
-        // Jump Phase
         while (prev < n && data[Mathf.Min(step, n) - 1] < target)
         {
             AlgorithmMetrics.Instance.AddStep();
@@ -95,7 +94,6 @@ public class JumpSearchVisualizer : MonoBehaviour
             }
         }
 
-        // Linear Scan inside block
         for (int i = prev; i < Mathf.Min(step, n); i++)
         {
             AlgorithmMetrics.Instance.AddStep();

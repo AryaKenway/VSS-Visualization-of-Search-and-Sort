@@ -92,11 +92,9 @@ public class RadixSortVisualizer : MonoBehaviour
             yield return new WaitForSeconds(animationSpeed);
         }
 
-        // Cumulative
         for (int i = 1; i < 10; i++)
             count[i] += count[i - 1];
 
-        // Build output (stable)
         for (int i = n - 1; i >= 0; i--)
         {
             int digit = (data[i] / exp) % 10;
@@ -104,7 +102,6 @@ public class RadixSortVisualizer : MonoBehaviour
             count[digit]--;
         }
 
-        // Animate overwrite
         for (int i = 0; i < n; i++)
         {
             data[i] = output[i];

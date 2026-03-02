@@ -61,16 +61,6 @@ public class TreeSortVisualizer : MonoBehaviour
                 maxValue = value;
         }
     }
-    //void BuildBalancedTree(List<int> values, int start, int end)
-    //{
-    //    if (start > end) return;
-
-    //    int mid = (start + end) / 2;
-    //    InsertNode(values[mid]);
-
-    //    BuildBalancedTree(values, start, mid - 1);
-    //    BuildBalancedTree(values, mid + 1, end);
-    //}
 
     void ClearTree()
     {
@@ -134,7 +124,7 @@ public class TreeSortVisualizer : MonoBehaviour
         Vector2 direction = end - start;
         float length = direction.magnitude;
 
-        rt.sizeDelta = new Vector2(length, 4f); // 4px thickness
+        rt.sizeDelta = new Vector2(length, 4f);
         rt.anchoredPosition = start + direction / 2f;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -168,7 +158,6 @@ public class TreeSortVisualizer : MonoBehaviour
 
         AlgorithmMetrics.Instance.AddStep();
 
-        // Highlight
         node.rect.GetComponent<Image>().color = Color.yellow;
 
         AlgorithmAudioGenerator.Instance.PlayPing(node.value, maxValue);

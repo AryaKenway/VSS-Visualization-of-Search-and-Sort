@@ -51,7 +51,6 @@ public class LinearSearchVisualizer : MonoBehaviour
     {
         float maxVal = 50f;
 
-        // Start Metrics
         AlgorithmMetrics.Instance.StartTracking(data.Length);
 
         for (int i = 0; i < visualBars.Count; i++)
@@ -86,7 +85,6 @@ public class LinearSearchVisualizer : MonoBehaviour
             }
         }
 
-        // If not found
         AlgorithmMetrics.Instance.StopTracking();
     }
 

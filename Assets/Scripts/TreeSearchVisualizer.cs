@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using DG.Tweening; // Requires DOTween Asset
+using DG.Tweening; 
 
 public class TreeSearchVisualizer : MonoBehaviour
 {
@@ -31,8 +31,7 @@ public class TreeSearchVisualizer : MonoBehaviour
     private TreeNode root;
     private List<TreeNode> allNodes = new List<TreeNode>();
     private List<GameObject> allLines = new List<GameObject>();
-    private float maxValue = 100f; // For audio scaling
-
+    private float maxValue = 100f; 
     class TreeNode
     {
         public int value;
@@ -57,9 +56,6 @@ public class TreeSearchVisualizer : MonoBehaviour
         GenerateRandomTree();
     }
 
-    // ===============================
-    // 1. GENERATION & SPACING
-    // ===============================
 
     public void GenerateRandomTree()
     {
@@ -75,10 +71,8 @@ public class TreeSearchVisualizer : MonoBehaviour
 
         maxValue = values[values.Count - 1];
 
-        // Build balanced BST
         root = BuildBalancedTree(values, 0, values.Count - 1);
 
-        // Position nodes starting from your manual offset
         PositionNodesRecursive(root, treeStartingPos, startingHorizontalSpacing);
 
         StartCoroutine(AnimateTreeEntry());
@@ -115,10 +109,6 @@ public class TreeSearchVisualizer : MonoBehaviour
         if (node.right != null)
             PositionNodesRecursive(node.right, pos + new Vector2(xOffset, -verticalSpacing), nextOffset);
     }
-
-    // ===============================
-    // 2. LINE DRAWING & ANIMATION
-    // ===============================
 
     IEnumerator AnimateTreeEntry()
     {
@@ -171,10 +161,6 @@ public class TreeSearchVisualizer : MonoBehaviour
         rt.localRotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
-    // ===============================
-    // 3. THE SEARCH LOGIC (With Metrics & Audio)
-    // ===============================
-
     public void OnSearchClicked()
     {
         if (int.TryParse(searchInput.text, out int target))
@@ -194,11 +180,9 @@ public class TreeSearchVisualizer : MonoBehaviour
         {
             AlgorithmMetrics.Instance.AddStep();
 
-            // Highlight and Play Audio
             current.nodeImage.DOColor(checkingColor, 0.3f);
             current.rect.DOScale(Vector3.one * 1.2f, 0.3f);
 
-            // Audio Ping based on node value
             AlgorithmAudioGenerator.Instance.PlayPing(current.value, maxValue);
 
             yield return new WaitForSeconds(0.8f);
@@ -213,7 +197,6 @@ public class TreeSearchVisualizer : MonoBehaviour
                 yield break;
             }
 
-            // Discard and move on
             current.nodeImage.DOColor(discardedColor, 0.3f);
             current.rect.DOScale(Vector3.one, 0.3f);
 
@@ -227,9 +210,6 @@ public class TreeSearchVisualizer : MonoBehaviour
         }
     }
 
-    // ===============================
-    // 4. UTILS
-    // ===============================
 
     void ResetVisuals()
     {
