@@ -9,6 +9,7 @@ public class MergeSortVisualizer : MonoBehaviour
 {
     public GameObject barPrefab;
     public Transform container;
+
     private List<GameObject> visualBars = new List<GameObject>();
     private int[] data;
 
@@ -19,23 +20,34 @@ public class MergeSortVisualizer : MonoBehaviour
 
     public void GenerateRandomArray()
     {
-        foreach (var bar in visualBars) Destroy(bar);
+        foreach (var bar in visualBars)
+            Destroy(bar);
+
         visualBars.Clear();
 
-        data = new int[10]; 
+        data = new int[10];
+
         for (int i = 0; i < data.Length; i++)
         {
             data[i] = Random.Range(10, 100);
+
             GameObject newBar = Instantiate(barPrefab, container);
             newBar.GetComponentInChildren<TMP_Text>().text = data[i].ToString();
 
             RectTransform rt = newBar.GetComponent<RectTransform>();
             rt.sizeDelta = new Vector2(60, data[i] * 2.0f);
+
             visualBars.Add(newBar);
         }
+
+        AlgorithmMetrics.Instance.StopTracking();
     }
 
-    public void StartMergeSort() => StartCoroutine(MergeSortCoroutine(0, data.Length - 1));
+    public void StartMergeSort()
+    {
+        AlgorithmMetrics.Instance.StartTracking(data.Length);
+        StartCoroutine(MergeSortCoroutine(0, data.Length - 1));
+    }
 
     IEnumerator MergeSortCoroutine(int left, int right)
     {
@@ -57,16 +69,28 @@ public class MergeSortVisualizer : MonoBehaviour
         int[] leftArray = new int[n1];
         int[] rightArray = new int[n2];
 
-        for (int i = 0; i < n1; i++) leftArray[i] = data[left + i];
-        for (int j = 0; j < n2; j++) rightArray[j] = data[mid + 1 + j];
+        for (int i = 0; i < n1; i++)
+        {
+            leftArray[i] = data[left + i];
+            AlgorithmMetrics.Instance.AddStep();
+        }
+
+        for (int j = 0; j < n2; j++)
+        {
+            rightArray[j] = data[mid + 1 + j];
+            AlgorithmMetrics.Instance.AddStep();
+        }
 
         int k = left;
-        int iIdx = 0, jIdx = 0;
+        int iIdx = 0;
+        int jIdx = 0;
 
         while (iIdx < n1 && jIdx < n2)
         {
             HighlightBar(left + iIdx, Color.yellow);
             HighlightBar(mid + 1 + jIdx, Color.yellow);
+
+            AlgorithmMetrics.Instance.AddStep();
             AlgorithmAudioGenerator.Instance.PlayPing(data[left + iIdx], 100);
 
             yield return new WaitForSeconds(0.2f);
@@ -83,6 +107,7 @@ public class MergeSortVisualizer : MonoBehaviour
                 UpdateBarVisual(k, data[k]);
                 jIdx++;
             }
+
             k++;
         }
 
@@ -90,7 +115,12 @@ public class MergeSortVisualizer : MonoBehaviour
         {
             data[k] = leftArray[iIdx];
             UpdateBarVisual(k, data[k]);
-            iIdx++; k++;
+
+            AlgorithmMetrics.Instance.AddStep();
+
+            iIdx++;
+            k++;
+
             yield return new WaitForSeconds(0.1f);
         }
 
@@ -98,17 +128,26 @@ public class MergeSortVisualizer : MonoBehaviour
         {
             data[k] = rightArray[jIdx];
             UpdateBarVisual(k, data[k]);
-            jIdx++; k++;
+
+            AlgorithmMetrics.Instance.AddStep();
+
+            jIdx++;
+            k++;
+
             yield return new WaitForSeconds(0.1f);
         }
 
-        for (int x = left; x <= right; x++) HighlightBar(x, Color.green);
+        for (int x = left; x <= right; x++)
+            HighlightBar(x, Color.green);
+
+        AlgorithmMetrics.Instance.StopTracking();
         AlgorithmAudioGenerator.Instance.PlaySuccessSound();
     }
 
     void UpdateBarVisual(int index, int value)
     {
         visualBars[index].GetComponentInChildren<TMP_Text>().text = value.ToString();
+
         RectTransform rt = visualBars[index].GetComponent<RectTransform>();
         rt.DOSizeDelta(new Vector2(60, value * 2.0f), 0.2f);
     }
