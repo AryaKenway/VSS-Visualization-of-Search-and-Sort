@@ -19,6 +19,9 @@ public class TreeSortVisualizer : MonoBehaviour
     private int sortedIndex = 0;
     private int maxValue;
 
+    // --- NEW VARIABLE FOR RESET FUNCTIONALITY ---
+    private List<int> snapshotValues = new List<int>();
+
     class TreeNode
     {
         public int value;
@@ -51,6 +54,9 @@ public class TreeSortVisualizer : MonoBehaviour
                 values.Add(val);
         }
 
+        // --- SNAPSHOT THE VALUES HERE ---
+        snapshotValues = new List<int>(values);
+
         maxValue = 0;
 
         foreach (int value in values)
@@ -60,6 +66,25 @@ public class TreeSortVisualizer : MonoBehaviour
             if (value > maxValue)
                 maxValue = value;
         }
+    }
+
+    // --- NEW METHOD: RESET TO SNAPSHOT ---
+    // This allows the Shake script to bring back the original numbers
+    public void ResetToSnapshot()
+    {
+        if (snapshotValues.Count == 0) return;
+
+        StopAllCoroutines();
+        ClearTree();
+        maxValue = 0;
+
+        foreach (int value in snapshotValues)
+        {
+            InsertNode(value);
+            if (value > maxValue) maxValue = value;
+        }
+
+        Debug.Log("<color=green>Tree Sort:</color> Reset to original snapshot.");
     }
 
     void ClearTree()
@@ -131,6 +156,7 @@ public class TreeSortVisualizer : MonoBehaviour
         rt.rotation = Quaternion.Euler(0, 0, angle);
 
     }
+
     void RemoveAllLines()
     {
         List<GameObject> linesToRemove = new List<GameObject>();
@@ -144,6 +170,7 @@ public class TreeSortVisualizer : MonoBehaviour
         foreach (GameObject line in linesToRemove)
             Destroy(line);
     }
+
     public void StartTreeSort()
     {
         AlgorithmMetrics.Instance.StartTracking(allNodes.Count);

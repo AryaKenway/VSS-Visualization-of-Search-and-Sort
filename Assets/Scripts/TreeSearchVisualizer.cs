@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using DG.Tweening; 
+using DG.Tweening;
 
 public class TreeSearchVisualizer : MonoBehaviour
 {
@@ -31,7 +31,11 @@ public class TreeSearchVisualizer : MonoBehaviour
     private TreeNode root;
     private List<TreeNode> allNodes = new List<TreeNode>();
     private List<GameObject> allLines = new List<GameObject>();
-    private float maxValue = 100f; 
+    private float maxValue = 100f;
+
+    // --- NEW VARIABLE FOR RESET FUNCTIONALITY ---
+    private List<int> snapshotValues = new List<int>();
+
     class TreeNode
     {
         public int value;
@@ -69,6 +73,9 @@ public class TreeSearchVisualizer : MonoBehaviour
         }
         values.Sort();
 
+        // --- SNAPSHOT THE VALUES HERE ---
+        snapshotValues = new List<int>(values);
+
         maxValue = values[values.Count - 1];
 
         root = BuildBalancedTree(values, 0, values.Count - 1);
@@ -76,6 +83,24 @@ public class TreeSearchVisualizer : MonoBehaviour
         PositionNodesRecursive(root, treeStartingPos, startingHorizontalSpacing);
 
         StartCoroutine(AnimateTreeEntry());
+    }
+
+    // --- NEW METHOD: RESET TO SNAPSHOT ---
+    public void ResetToSnapshot()
+    {
+        if (snapshotValues.Count == 0) return;
+
+        StopAllCoroutines();
+        ClearTree();
+
+        // Use the snapshot to rebuild the exact same tree
+        maxValue = snapshotValues[snapshotValues.Count - 1];
+        root = BuildBalancedTree(snapshotValues, 0, snapshotValues.Count - 1);
+
+        PositionNodesRecursive(root, treeStartingPos, startingHorizontalSpacing);
+        StartCoroutine(AnimateTreeEntry());
+
+        Debug.Log("<color=cyan>Tree Search:</color> Reset to original snapshot via shake.");
     }
 
     TreeNode BuildBalancedTree(List<int> values, int start, int end)

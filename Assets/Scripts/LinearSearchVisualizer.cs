@@ -16,6 +16,9 @@ public class LinearSearchVisualizer : MonoBehaviour
     private List<GameObject> visualBars = new List<GameObject>();
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
 
+    // --- NEW VARIABLE FOR RESET FUNCTIONALITY ---
+    private int[] snapshotData;
+
     void Start()
     {
         GenerateArray(new int[] { 10, 25, 5, 40, 15, 30 });
@@ -28,6 +31,9 @@ public class LinearSearchVisualizer : MonoBehaviour
         originalScales.Clear();
 
         data = newData;
+
+        // --- TAKE SNAPSHOT ---
+        snapshotData = (int[])newData.Clone();
 
         foreach (int val in newData)
         {
@@ -42,6 +48,18 @@ public class LinearSearchVisualizer : MonoBehaviour
         }
     }
 
+    // --- NEW METHOD: RESET TO SNAPSHOT ---
+    public void ResetToSnapshot()
+    {
+        if (snapshotData == null || snapshotData.Length == 0) return;
+
+        StopAllCoroutines();
+        // Re-generate using the stored snapshot
+        GenerateArray(snapshotData);
+
+        Debug.Log("<color=yellow>Linear Search:</color> Reset to snapshot via shake.");
+    }
+
     public void StartLinearSearch(int target)
     {
         StartCoroutine(LinearSearchCoroutine(target));
@@ -50,20 +68,17 @@ public class LinearSearchVisualizer : MonoBehaviour
     IEnumerator LinearSearchCoroutine(int target)
     {
         float maxVal = 50f;
-
         AlgorithmMetrics.Instance.StartTracking(data.Length);
 
         for (int i = 0; i < visualBars.Count; i++)
         {
             AlgorithmMetrics.Instance.AddStep();
-
             Image barImage = visualBars[i].GetComponent<Image>();
 
             barImage.DOColor(Color.yellow, 0.3f);
             visualBars[i].transform.DOScale(originalScales[visualBars[i]] * 1.2f, 0.2f);
 
             int currentVal = int.Parse(visualBars[i].GetComponentInChildren<TMP_Text>().text);
-
             AlgorithmAudioGenerator.Instance.PlayPing(currentVal, maxVal);
 
             yield return new WaitForSeconds(0.5f);
@@ -72,7 +87,6 @@ public class LinearSearchVisualizer : MonoBehaviour
             {
                 barImage.DOColor(Color.green, 0.3f);
                 AlgorithmAudioGenerator.Instance.PlaySuccessSound();
-
                 AlgorithmMetrics.Instance.StopTracking();
                 yield break;
             }
@@ -84,14 +98,12 @@ public class LinearSearchVisualizer : MonoBehaviour
                 barImage.DOColor(Color.white, 0.3f);
             }
         }
-
         AlgorithmMetrics.Instance.StopTracking();
     }
 
     public void OnSearchButtonClicked()
     {
         StopAllCoroutines();
-
         foreach (var bar in visualBars)
         {
             bar.GetComponent<Image>().color = Color.white;
@@ -111,13 +123,11 @@ public class LinearSearchVisualizer : MonoBehaviour
     public void OnRandomizeButtonClicked()
     {
         StopAllCoroutines();
-
         int[] randomData = new int[6];
         for (int i = 0; i < randomData.Length; i++)
         {
             randomData[i] = Random.Range(5, 50);
         }
-
         GenerateArray(randomData);
     }
 }

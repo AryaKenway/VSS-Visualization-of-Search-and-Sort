@@ -1959,6 +1959,7 @@ GameObject:
   - component: {fileID: 1249969495}
   - component: {fileID: 1249969497}
   - component: {fileID: 1249969498}
+  - component: {fileID: 1249969499}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -2027,6 +2028,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AlgorithmMetrics
   metricsText: {fileID: 1517606601}
+--- !u!114 &1249969499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249969494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53387d943f834914dbbba10f6f472f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShakeShuffle
+  shakeThreshold: 2
+  cooldown: 1.5
 --- !u!1 &1348383331
 GameObject:
   m_ObjectHideFlags: 0

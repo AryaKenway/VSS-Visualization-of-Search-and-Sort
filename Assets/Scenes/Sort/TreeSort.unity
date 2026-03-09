@@ -725,6 +725,7 @@ GameObject:
   - component: {fileID: 361498350}
   - component: {fileID: 361498351}
   - component: {fileID: 361498352}
+  - component: {fileID: 361498353}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -793,6 +794,22 @@ MonoBehaviour:
   avgText: {fileID: 513589656}
   worstText: {fileID: 422948862}
   spaceText: {fileID: 401738652}
+--- !u!114 &361498353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361498348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fdb5e8fd7a9e9343a14b2e6b9137ff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShakeShuffleTree
+  shakeThreshold: 2.5
+  cooldown: 1.2
+  sortVisualizer: {fileID: 507935820}
+  searchVisualizer: {fileID: 0}
 --- !u!1 &401738651
 GameObject:
   m_ObjectHideFlags: 0

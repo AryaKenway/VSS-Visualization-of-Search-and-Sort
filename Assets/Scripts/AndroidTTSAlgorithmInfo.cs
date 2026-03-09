@@ -26,69 +26,64 @@ public class AndroidTTSAlgorithmInfo : MonoBehaviour
     Dictionary<string, AlgoData> algorithms = new Dictionary<string, AlgoData>()
     {
         {
-        "Tree Sort",
-        new AlgoData{
-        best="O(n log n)",
-        avg="O(n log n)",
-        worst="O(n²)",
-        space="O(n)",
-        speech="Tree sort time complexity is n log n in the best and average case and n squared in the worst case. Space complexity is order n."
-        }
+            "Tree Sort",
+            new AlgoData {
+                best="O(n log n)",
+                avg="O(n log n)",
+                worst="O(n²)",
+                space="O(n)",
+                speech="Tree Sort works by building a Binary Search Tree from the input elements and then performing an in-order traversal. It is uniquely useful because it keeps data sorted as it is inserted, though it can become inefficient if the tree becomes unbalanced, leading to a worst-case quadratic time complexity."
+            }
         },
-
         {
-        "Merge Sort",
-        new AlgoData{
-        best="O(n log n)",
-        avg="O(n log n)",
-        worst="O(n log n)",
-        space="O(n)",
-        speech="Merge sort time complexity is n log n in all cases. Space complexity is order n."
-        }
+            "Merge Sort",
+            new AlgoData {
+                best="O(n log n)",
+                avg="O(n log n)",
+                worst="O(n log n)",
+                space="O(n)",
+                speech="Merge Sort is a classic divide-and-conquer algorithm. It recursively splits the array into halves until they are single elements, then merges them back together in perfect order. It is highly stable and guaranteed to perform in N-Log-N time, making it a top choice for sorting large, complex data sets."
+            }
         },
-
         {
-        "Radix Sort",
-        new AlgoData{
-        best="O(nk)",
-        avg="O(nk)",
-        worst="O(nk)",
-        space="O(n + k)",
-        speech="Radix sort time complexity is n k where k is the number of digits. Space complexity is order n plus k."
-        }
+            "Radix Sort",
+            new AlgoData {
+                best="O(nk)",
+                avg="O(nk)",
+                worst="O(nk)",
+                space="O(n + k)",
+                speech="Unlike comparison-based sorts, Radix Sort avoids comparing numbers directly. Instead, it distributes elements into buckets based on their individual digits, starting from the least significant. This makes it incredibly fast for integers, often outperforming general-purpose algorithms in specific hardware scenarios."
+            }
         },
-
         {
-        "Linear Search",
-        new AlgoData{
-        best="O(1)",
-        avg="O(n)",
-        worst="O(n)",
-        space="O(1)",
-        speech="Linear search time complexity is order one in the best case and order n in the average and worst case. Space complexity is order one."
-        }
+            "Linear Search",
+            new AlgoData {
+                best="O(1)",
+                avg="O(n)",
+                worst="O(n)",
+                space="O(1)",
+                speech="Linear Search is the most intuitive search method. it checks every single element one by one until a match is found. while it is slow for large data sets, it is the only way to search through unsorted data without a pre-processing step."
+            }
         },
-
         {
-        "Tree Search",
-        new AlgoData{
-        best="O(log n)",
-        avg="O(log n)",
-        worst="O(n)",
-        space="O(1)",
-        speech="Tree search time complexity is log n in the best and average case and order n in the worst case."
-        }
+            "Tree Search",
+            new AlgoData {
+                best="O(log n)",
+                avg="O(log n)",
+                worst="O(n)",
+                space="O(1)",
+                speech="Binary Tree Search leverages the structured nature of a search tree to discard half of the remaining data with every single comparison. This logarithmic efficiency allows it to find a specific item among millions of records in just a few steps, provided the tree remains well-balanced."
+            }
         },
-
         {
-        "Jump Search",
-        new AlgoData{
-        best="O(1)",
-        avg="O(√n)",
-        worst="O(√n)",
-        space="O(1)",
-        speech="Jump search time complexity is square root n in the average and worst case and order one in the best case."
-        }
+            "Jump Search",
+            new AlgoData {
+                best="O(1)",
+                avg="O(√n)",
+                worst="O(√n)",
+                space="O(1)",
+                speech="Jump Search offers a middle ground between linear and binary search. By jumping ahead in fixed blocks and then performing a short linear scan backward, it reduces the number of comparisons significantly. It is particularly effective on systems where jumping forward is cheaper than searching backward."
+            }
         }
     };
 
@@ -127,10 +122,22 @@ public class AndroidTTSAlgorithmInfo : MonoBehaviour
 
     public void CloseInfo()
     {
+        // Try to stop speech, but don't let a failure here stop the UI from closing
+        try
+        {
 #if UNITY_ANDROID && !UNITY_EDITOR
         if (tts != null)
-            tts.Call("stop");
+        {
+            tts.Call<int>("stop"); // Added <int> to match signature returns
+        }
 #endif
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("TTS Stop failed: " + e.Message);
+        }
+
+        // This line MUST run even if the TTS crashes
         infoPanel.SetActive(false);
     }
 

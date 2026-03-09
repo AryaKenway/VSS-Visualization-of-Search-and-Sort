@@ -1237,6 +1237,7 @@ GameObject:
   - component: {fileID: 602373387}
   - component: {fileID: 602373389}
   - component: {fileID: 602373390}
+  - component: {fileID: 602373391}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -1305,6 +1306,20 @@ MonoBehaviour:
   avgText: {fileID: 1218518503}
   worstText: {fileID: 618949433}
   spaceText: {fileID: 1963997672}
+--- !u!114 &602373391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602373386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53387d943f834914dbbba10f6f472f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShakeShuffle
+  shakeThreshold: 2
+  cooldown: 1.5
 --- !u!1 &618949430
 GameObject:
   m_ObjectHideFlags: 0
@@ -1971,7 +1986,7 @@ GameObject:
   - component: {fileID: 1166527337}
   - component: {fileID: 1166527336}
   m_Layer: 5
-  m_Name: Reset
+  m_Name: Randomize
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2734,7 +2749,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Reset
+  m_text: Randomize
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

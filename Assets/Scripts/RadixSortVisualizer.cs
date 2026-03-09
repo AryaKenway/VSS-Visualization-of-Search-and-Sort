@@ -4,6 +4,7 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Debug = UnityEngine.Debug;
 
 public class RadixSortVisualizer : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class RadixSortVisualizer : MonoBehaviour
 
     private List<GameObject> bars = new List<GameObject>();
     private int[] data;
+
+    // --- NEW: Stores the original unsorted state ---
+    private int[] snapshotData;
 
     void Start()
     {
@@ -40,7 +44,35 @@ public class RadixSortVisualizer : MonoBehaviour
 
             bars.Add(newBar);
         }
+
+        // --- TAKE SNAPSHOT ---
+        snapshotData = (int[])data.Clone();
+
         AlgorithmMetrics.Instance.StopTracking();
+    }
+
+    // --- NEW METHOD: RESET TO SNAPSHOT ---
+    public void ResetToSnapshot()
+    {
+        if (snapshotData == null) return;
+
+        StopAllCoroutines();
+
+        // Restore the data array from the snapshot
+        data = (int[])snapshotData.Clone();
+
+        // Update the visual bars to match the snapshot values
+        for (int i = 0; i < bars.Count; i++)
+        {
+            bars[i].GetComponent<Image>().color = Color.white;
+            bars[i].GetComponentInChildren<TMP_Text>().text = data[i].ToString();
+
+            RectTransform rt = bars[i].GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(70, data[i]);
+            bars[i].transform.localScale = Vector3.one;
+        }
+
+        Debug.Log("<color=magenta>Radix Sort:</color> Reset to snapshot via shake.");
     }
 
     public void StartRadixSort()
@@ -60,9 +92,9 @@ public class RadixSortVisualizer : MonoBehaviour
 
         for (int i = 0; i < data.Length; i++)
             Highlight(i, Color.green);
+
         AlgorithmMetrics.Instance.StopTracking();
         AlgorithmAudioGenerator.Instance.PlaySuccessSound();
-
     }
 
     int GetMax()
@@ -81,7 +113,6 @@ public class RadixSortVisualizer : MonoBehaviour
         int[] output = new int[n];
         int[] count = new int[10];
 
-        // Count digits
         for (int i = 0; i < n; i++)
         {
             int digit = (data[i] / exp) % 10;

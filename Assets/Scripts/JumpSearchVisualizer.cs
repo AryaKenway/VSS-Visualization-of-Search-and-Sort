@@ -18,6 +18,9 @@ public class JumpSearchVisualizer : MonoBehaviour
     private List<GameObject> bars = new List<GameObject>();
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
 
+    // --- NEW: Stores the original unsorted state for Resetting ---
+    private int[] snapshotData;
+
     void Start()
     {
         GenerateRandomArray();
@@ -44,6 +47,33 @@ public class JumpSearchVisualizer : MonoBehaviour
             bars.Add(newBar);
             originalScales[newBar] = newBar.transform.localScale;
         }
+
+        // --- TAKE SNAPSHOT OF THE UNSORTED DATA ---
+        snapshotData = (int[])data.Clone();
+    }
+
+    // --- NEW METHOD: RESET TO SNAPSHOT ---
+    public void ResetToSnapshot()
+    {
+        if (snapshotData == null) return;
+
+        StopAllCoroutines();
+
+        // Restore the data to the original unsorted state
+        data = (int[])snapshotData.Clone();
+
+        // Update visuals to match the unsorted snapshot
+        for (int i = 0; i < bars.Count; i++)
+        {
+            bars[i].GetComponent<Image>().color = Color.white;
+            bars[i].GetComponentInChildren<TMP_Text>().text = data[i].ToString();
+
+            RectTransform rt = bars[i].GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(60, data[i] * 5);
+            bars[i].transform.localScale = originalScales[bars[i]];
+        }
+
+        Debug.Log("<color=orange>Jump Search:</color> Reset to unsorted snapshot via shake.");
     }
 
     public void OnJumpSearchClicked()
@@ -58,7 +88,7 @@ public class JumpSearchVisualizer : MonoBehaviour
 
     IEnumerator JumpSearchCoroutine(int target)
     {
-       
+        // Jump Search requires sorted array
         System.Array.Sort(data);
         RegenerateSortedVisuals();
 
@@ -71,6 +101,7 @@ public class JumpSearchVisualizer : MonoBehaviour
         int prev = 0;
         float maxVal = 80f;
 
+        // Jump Phase
         while (prev < n && data[Mathf.Min(step, n) - 1] < target)
         {
             AlgorithmMetrics.Instance.AddStep();
@@ -94,6 +125,7 @@ public class JumpSearchVisualizer : MonoBehaviour
             }
         }
 
+        // Linear Scan inside block
         for (int i = prev; i < Mathf.Min(step, n); i++)
         {
             AlgorithmMetrics.Instance.AddStep();
