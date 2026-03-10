@@ -33,12 +33,12 @@ public class AppNavigation : MonoBehaviour
 
     public void LoadMergeSort()
     {
-        SceneManager.LoadScene("MergeSortScene");
+        PixelSceneTransition.Instance.TransitionToScene("MergeSortScene");
     }
 
     public void LoadTreeSort()
     {
-        SceneManager.LoadScene("TreeSort");
+        PixelSceneTransition.Instance.TransitionToScene("TreeSort");
     }
 
     public void LoadRadixSort()
@@ -49,22 +49,20 @@ public class AppNavigation : MonoBehaviour
 
     public void LoadLinearSearch()
     {
-        SceneManager.LoadScene("LinearSearchScene");
+        PixelSceneTransition.Instance.TransitionToScene("LinearSearchScene");
     }
 
     public void LoadTreeSearch()
     {
-        SceneManager.LoadScene("TreeSearch");
+        PixelSceneTransition.Instance.TransitionToScene("TreeSearch");
     }
 
     public void LoadJumpSearch()
     {
-        SceneManager.LoadScene("JumpSearch");
+        PixelSceneTransition.Instance.TransitionToScene("JumpSearch");
     }
     public void LoadMainMenu()
     {
-        Debug.Log("Main Menu");
-
-        SceneManager.LoadScene("MainMenu");
+        PixelSceneTransition.Instance.TransitionToScene("MainMenu");
     }
 }

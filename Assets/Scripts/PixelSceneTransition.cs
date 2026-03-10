@@ -43,31 +43,59 @@ public class PixelSceneTransition : MonoBehaviour
 
     void SetupGrid()
     {
-        // Clear existing just in case
         foreach (Transform child in gridParent) Destroy(child.gameObject);
         pixels.Clear();
 
-        // Use the RectTransform size instead of Screen.width/height 
-        // to account for Canvas Scaling
-        float width = gridParent.rect.width / (float)cols;
-        float height = gridParent.rect.height / (float)rows;
+        float gridWidth = gridParent.rect.width;
+        float gridHeight = gridParent.rect.height;
+
+        float cellWidth = gridWidth / (float)cols;
+        float cellHeight = (gridHeight / (float)rows) * 1.25f;
 
         for (int r = 0; r < rows; r++)
         {
-            for (int c = 0; c < cols; c++)
+            for (int c = 0; c <= cols; c++)
             {
                 GameObject go = Instantiate(pixelPrefab, gridParent);
                 RectTransform rt = go.GetComponent<RectTransform>();
                 Image img = go.GetComponent<Image>();
 
-                // Set Random Color from our list
-                if (transitionColors.Length > 0)
-                    img.color = transitionColors[Random.Range(0, transitionColors.Length)];
+                // --- 4-COLOR CYBERPUNK DISTRIBUTION ---
+                if (transitionColors != null && transitionColors.Length >= 4)
+                {
+                    float roll = Random.value; // Get a random number between 0 and 1
 
-                // Positioning
-                rt.sizeDelta = new Vector2(width + 2, height + 2); // Overlap slightly to avoid gaps
+                    if (roll > 0.97f)
+                    {
+                        // 3% chance: THE GLITCH (Color 3) - Brightest neon
+                        img.color = transitionColors[3];
+                    }
+                    else if (roll > 0.90f)
+                    {
+                        // 7% chance: THE DEPTH (Color 1 or 2) - Muted secondary neons
+                        img.color = transitionColors[Random.Range(1, 3)];
+                    }
+                    else
+                    {
+                        // 90% chance: THE BASE (Color 0) - Very dark background
+                        float brightnessVar = Random.Range(0.85f, 1f);
+                        Color baseCol = transitionColors[0] * brightnessVar;
+                        img.color = new Color(baseCol.r, baseCol.g, baseCol.b, 0.95f);
+                    }
+                }
+
+                rt.anchorMin = new Vector2(0, 1);
+                rt.anchorMax = new Vector2(0, 1);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(c * width + (width / 2), -r * height - (height / 2));
+
+                // Slightly wider overlap to ensure total coverage
+                rt.sizeDelta = new Vector2(cellWidth * 1.45f, cellWidth * 1.45f);
+
+                float xOffset = (r % 2 == 0) ? (cellWidth / 2f) : 0;
+                float xPos = (c * cellWidth) + xOffset;
+                float yPos = -(r * (cellHeight * 0.75f));
+
+                rt.anchoredPosition = new Vector2(xPos, yPos);
                 rt.localScale = Vector3.zero;
 
                 pixels.Add(rt);
@@ -83,38 +111,35 @@ public class PixelSceneTransition : MonoBehaviour
 
     IEnumerator ExecuteTransition(string sceneName)
     {
-        // 1. Close the "Curtain"
+        // Re-shuffle for randomness
         ShuffleList(pixels);
 
+        // 1. Pixels POP IN
         for (int i = 0; i < pixels.Count; i++)
         {
-            // We use SetDelay instead of a Sequence to avoid the "Lock" error
             pixels[i].DOScale(1f, pixelAnimDuration)
                      .SetEase(Ease.OutSine)
                      .SetDelay(i * delayBetweenPixels);
         }
 
-        // Wait for the last pixel to finish scaling up
+        // Wait for the full grid to be visible
         yield return new WaitForSeconds((pixels.Count * delayBetweenPixels) + pixelAnimDuration);
 
-        // 2. Load the actual scene
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        while (!asyncLoad.isDone) yield return null;
+        // 2. LOAD SCENE
+        SceneManager.LoadScene(sceneName);
 
-        // 3. Open the "Curtain"
-        ShuffleList(pixels);
+        // Give the new scene a frame to settle
+        yield return new WaitForEndOfFrame();
 
+        // 3. Pixels POP OUT
+        ShuffleList(pixels); // Shuffle again for a different pattern
         for (int i = 0; i < pixels.Count; i++)
         {
             pixels[i].DOScale(0f, pixelAnimDuration)
                      .SetEase(Ease.InSine)
                      .SetDelay(i * delayBetweenPixels);
         }
-
-        // Final wait to ensure everything is clear
-        yield return new WaitForSeconds((pixels.Count * delayBetweenPixels) + pixelAnimDuration);
     }
-
     void ShuffleList(List<RectTransform> list)
     {
         for (int i = 0; i < list.Count; i++)
