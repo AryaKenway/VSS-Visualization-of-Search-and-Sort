@@ -43,7 +43,7 @@ public class AppNavigation : MonoBehaviour
 
     public void LoadRadixSort()
     {
-        SceneManager.LoadScene("RadixSort");
+        PixelSceneTransition.Instance.TransitionToScene("RadixSort");
     }
 
 
