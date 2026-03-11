@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class PixelSceneTransition : MonoBehaviour
 {
     public static PixelSceneTransition Instance;
@@ -12,20 +13,20 @@ public class PixelSceneTransition : MonoBehaviour
     [Header("Settings")]
     public GameObject pixelPrefab;
     public RectTransform gridParent;
-    public int rows = 20; // Increased for better coverage
-    public int cols = 12;
-    public float pixelAnimDuration = 0.4f;
-    public float delayBetweenPixels = 0.005f;
+    public int rows = 35;
+    public int cols = 20;
+    public float pixelAnimDuration = 0.25f;
+    public float delayBetweenPixels = 0.0015f;
+
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip glitchSound;
 
     [Header("Colors")]
-    public Color[] transitionColors = new Color[] {
-        Color.black,
-        new Color(0.1f, 0.1f, 0.1f), // Dark Grey
-        new Color(0.2f, 0, 0.2f),    // Deep Purple
-        new Color(0, 0.1f, 0.2f)     // Deep Blue
-    };
+    public Color[] transitionColors;
 
     private List<RectTransform> pixels = new List<RectTransform>();
+    private CanvasGroup canvasGroup;
 
     void Awake()
     {
@@ -33,6 +34,12 @@ public class PixelSceneTransition : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            canvasGroup = GetComponent<CanvasGroup>();
+
+            DOTween.SetTweensCapacity(1500, 100);
+            // Auto-setup AudioSource if missing
+            if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+
             SetupGrid();
         }
         else
@@ -43,61 +50,65 @@ public class PixelSceneTransition : MonoBehaviour
 
     void SetupGrid()
     {
+        // 1. Clear old hexagons
         foreach (Transform child in gridParent) Destroy(child.gameObject);
         pixels.Clear();
 
-        float gridWidth = gridParent.rect.width;
-        float gridHeight = gridParent.rect.height;
+        // 2. Force Unity to recalculate UI layout before we do math
+        Canvas.ForceUpdateCanvases();
 
-        float cellWidth = gridWidth / (float)cols;
-        float cellHeight = (gridHeight / (float)rows) * 1.25f;
+        // 3. Get the ACTUAL dimensions of the container
+        float screenWidth = gridParent.rect.width;
+        float screenHeight = gridParent.rect.height;
+
+        // Calculate basic cell size
+        float cellWidth = screenWidth / (float)cols;
+
+        // ADAPTIVE FIX: Calculate height based on actual screen height, 
+        // then multiply by 1.25 to account for the honeycomb vertical nesting.
+        float cellHeight = (screenHeight / (float)rows) * 1.25f;
 
         for (int r = 0; r < rows; r++)
         {
-            for (int c = 0; c <= cols; c++)
+            // c <= cols + 1 ensures the right edge is covered during stagger
+            for (int c = 0; c <= cols + 1; c++)
             {
                 GameObject go = Instantiate(pixelPrefab, gridParent);
                 RectTransform rt = go.GetComponent<RectTransform>();
                 Image img = go.GetComponent<Image>();
 
-                // --- 4-COLOR CYBERPUNK DISTRIBUTION ---
+                // --- 4-COLOR CYBERPUNK DISTRIBUTION (Your stable logic) ---
                 if (transitionColors != null && transitionColors.Length >= 4)
                 {
-                    float roll = Random.value; // Get a random number between 0 and 1
-
+                    float roll = Random.value;
                     if (roll > 0.97f)
-                    {
-                        // 3% chance: THE GLITCH (Color 3) - Brightest neon
-                        img.color = transitionColors[3];
-                    }
+                        img.color = transitionColors[3]; // Glitch
                     else if (roll > 0.90f)
-                    {
-                        // 7% chance: THE DEPTH (Color 1 or 2) - Muted secondary neons
-                        img.color = transitionColors[Random.Range(1, 3)];
-                    }
+                        img.color = transitionColors[Random.Range(1, 3)]; // Depth
                     else
                     {
-                        // 90% chance: THE BASE (Color 0) - Very dark background
                         float brightnessVar = Random.Range(0.85f, 1f);
                         Color baseCol = transitionColors[0] * brightnessVar;
-                        img.color = new Color(baseCol.r, baseCol.g, baseCol.b, 0.95f);
+                        img.color = new Color(baseCol.r, baseCol.g, baseCol.b, 0.95f); // Base
                     }
                 }
 
-                rt.anchorMin = new Vector2(0, 1);
+                // --- ADAPTIVE POSITIONING ---
+                rt.anchorMin = new Vector2(0, 1); // Top-Left anchor
                 rt.anchorMax = new Vector2(0, 1);
                 rt.pivot = new Vector2(0.5f, 0.5f);
 
-                // Slightly wider overlap to ensure total coverage
-                rt.sizeDelta = new Vector2(cellWidth * 1.45f, cellWidth * 1.45f);
+                // Use a generous overlap (1.5x) to prevent sub-pixel gaps on high-res displays
+                rt.sizeDelta = new Vector2(cellWidth * 1.5f, cellWidth * 1.5f);
 
                 float xOffset = (r % 2 == 0) ? (cellWidth / 2f) : 0;
                 float xPos = (c * cellWidth) + xOffset;
+
+                // 0.75f nesting factor "zips" the hexagons together vertically
                 float yPos = -(r * (cellHeight * 0.75f));
 
                 rt.anchoredPosition = new Vector2(xPos, yPos);
                 rt.localScale = Vector3.zero;
-
                 pixels.Add(rt);
             }
         }
@@ -105,41 +116,54 @@ public class PixelSceneTransition : MonoBehaviour
 
     public void TransitionToScene(string sceneName)
     {
-        StopAllCoroutines(); // Prevent overlapping transitions
+        StopAllCoroutines();
         StartCoroutine(ExecuteTransition(sceneName));
     }
 
     IEnumerator ExecuteTransition(string sceneName)
     {
-        // Re-shuffle for randomness
-        ShuffleList(pixels);
+        canvasGroup.alpha = 1f;
 
-        // 1. Pixels POP IN
+        // --- TRIGGER CYBERPUNK AUDIO ---
+        if (glitchSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(glitchSound);
+        }
+
+        // 1. Pixels POP IN (Closing Screen)
+        ShuffleList(pixels);
         for (int i = 0; i < pixels.Count; i++)
         {
             pixels[i].DOScale(1f, pixelAnimDuration)
-                     .SetEase(Ease.OutSine)
+                     .SetEase(Ease.OutBack) // "Pop" effect for Cyber feel
                      .SetDelay(i * delayBetweenPixels);
         }
 
-        // Wait for the full grid to be visible
         yield return new WaitForSeconds((pixels.Count * delayBetweenPixels) + pixelAnimDuration);
 
         // 2. LOAD SCENE
-        SceneManager.LoadScene(sceneName);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        while (!asyncLoad.isDone) yield return null;
 
-        // Give the new scene a frame to settle
         yield return new WaitForEndOfFrame();
 
-        // 3. Pixels POP OUT
-        ShuffleList(pixels); // Shuffle again for a different pattern
+        // 3. Pixels POP OUT (Opening Screen)
+        ShuffleList(pixels);
         for (int i = 0; i < pixels.Count; i++)
         {
             pixels[i].DOScale(0f, pixelAnimDuration)
                      .SetEase(Ease.InSine)
                      .SetDelay(i * delayBetweenPixels);
         }
+
+        // --- SMOOTH FADE TO REVEAL ACTUAL SCENE ---
+        // Start fading the whole canvas slightly before the last hexagon shrinks
+        yield return new WaitForSeconds(0.15f);
+        canvasGroup.DOFade(0f, 0.5f).SetEase(Ease.OutQuad);
+
+        yield return new WaitForSeconds(0.5f);
     }
+
     void ShuffleList(List<RectTransform> list)
     {
         for (int i = 0; i < list.Count; i++)
