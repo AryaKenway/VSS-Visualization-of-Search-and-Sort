@@ -26,11 +26,14 @@ public class RadixSortVisualizer : MonoBehaviour
 
     public void GenerateArray()
     {
-        foreach (GameObject bar in bars)
-            Destroy(bar);
-
+        // 1. Clean up and setup
+        foreach (GameObject bar in bars) Destroy(bar);
         bars.Clear();
         data = new int[arraySize];
+
+        // 2. Temporarily disable layout to prevent "Big/Unorganized" glitch
+        HorizontalLayoutGroup layout = container.GetComponent<HorizontalLayoutGroup>();
+        if (layout != null) layout.enabled = false;
 
         for (int i = 0; i < arraySize; i++)
         {
@@ -39,38 +42,62 @@ public class RadixSortVisualizer : MonoBehaviour
             GameObject newBar = Instantiate(barPrefab, container);
             RectTransform rt = newBar.GetComponent<RectTransform>();
 
-            rt.sizeDelta = new Vector2(70, data[i]);
-            newBar.GetComponentInChildren<TMP_Text>().text = data[i].ToString();
+            // 3. APPLY THE "GOOD SCALE" RULES IMMEDIATELY
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.anchorMin = new Vector2(0.5f, 0f);
+            rt.anchorMax = new Vector2(0.5f, 0f);
 
+            // Match the scale you liked in the snapshot
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 70);
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, data[i]);
+            newBar.transform.localScale = Vector3.one;
+
+            newBar.GetComponentInChildren<TMP_Text>().text = data[i].ToString();
             bars.Add(newBar);
         }
 
-        // --- TAKE SNAPSHOT ---
-        snapshotData = (int[])data.Clone();
+        // 4. Force immediate organized layout
+        if (layout != null) layout.enabled = true;
+        Canvas.ForceUpdateCanvases(); // Force UI recalculation
+        LayoutRebuilder.ForceRebuildLayoutImmediate(container.GetComponent<RectTransform>());
 
+        snapshotData = (int[])data.Clone();
         AlgorithmMetrics.Instance.StopTracking();
     }
 
-    // --- NEW METHOD: RESET TO SNAPSHOT ---
     public void ResetToSnapshot()
     {
         if (snapshotData == null) return;
 
         StopAllCoroutines();
 
-        // Restore the data array from the snapshot
+        HorizontalLayoutGroup layout = container.GetComponent<HorizontalLayoutGroup>();
+        if (layout != null) layout.enabled = false;
+
         data = (int[])snapshotData.Clone();
 
-        // Update the visual bars to match the snapshot values
         for (int i = 0; i < bars.Count; i++)
         {
+            RectTransform rt = bars[i].GetComponent<RectTransform>();
+            rt.DOKill();
+            bars[i].GetComponent<Image>().DOKill();
+
             bars[i].GetComponent<Image>().color = Color.white;
             bars[i].GetComponentInChildren<TMP_Text>().text = data[i].ToString();
 
-            RectTransform rt = bars[i].GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(70, data[i]);
+            // 5. USE THE EXACT SAME SCALE RULES AS GENERATE
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.anchorMin = new Vector2(0.5f, 0f);
+            rt.anchorMax = new Vector2(0.5f, 0f);
+
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 70);
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, data[i]);
             bars[i].transform.localScale = Vector3.one;
         }
+
+        if (layout != null) layout.enabled = true;
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(container.GetComponent<RectTransform>());
 
         Debug.Log("<color=magenta>Radix Sort:</color> Reset to snapshot via shake.");
     }
@@ -90,8 +117,18 @@ public class RadixSortVisualizer : MonoBehaviour
             yield return CountingSort(exp);
         }
 
+        // --- THE FIX: Highlight ALL bars green ---
+        // Ensure i goes from 0 to exactly data.Length - 1
         for (int i = 0; i < data.Length; i++)
+        {
+            // Kill any cyan/yellow tweens still running on this bar
+            bars[i].GetComponent<Image>().DOKill();
+
             Highlight(i, Color.green);
+
+            // Optional: Add a tiny delay for a "scanning" success effect
+            yield return new WaitForSeconds(0.05f);
+        }
 
         AlgorithmMetrics.Instance.StopTracking();
         AlgorithmAudioGenerator.Instance.PlaySuccessSound();
@@ -113,19 +150,28 @@ public class RadixSortVisualizer : MonoBehaviour
         int[] output = new int[n];
         int[] count = new int[10];
 
+        // --- PHASE 1: OCCURRENCE COUNTING ---
         for (int i = 0; i < n; i++)
         {
             int digit = (data[i] / exp) % 10;
             count[digit]++;
+
             AlgorithmMetrics.Instance.AddStep();
+
+            // Highlight current digit being checked
             Highlight(i, Color.yellow);
             AlgorithmAudioGenerator.Instance.PlayPing(data[i], 999f);
             yield return new WaitForSeconds(animationSpeed);
+
+            // Return to white so the yellow doesn't bleed into the next step
+            bars[i].GetComponent<Image>().DOColor(Color.white, animationSpeed);
         }
 
+        // Accumulate counts
         for (int i = 1; i < 10; i++)
             count[i] += count[i - 1];
 
+        // Build output array
         for (int i = n - 1; i >= 0; i--)
         {
             int digit = (data[i] / exp) % 10;
@@ -133,18 +179,29 @@ public class RadixSortVisualizer : MonoBehaviour
             count[digit]--;
         }
 
+        // --- PHASE 2: VISUAL UPDATE (THE ADAPTIVE FIX) ---
         for (int i = 0; i < n; i++)
         {
             data[i] = output[i];
             AlgorithmMetrics.Instance.AddStep();
+
+            // Update Text
             bars[i].GetComponentInChildren<TMP_Text>().text = data[i].ToString();
 
             RectTransform rt = bars[i].GetComponent<RectTransform>();
-            rt.DOSizeDelta(new Vector2(70, data[i]), animationSpeed);
 
+            // STABILITY CHANGE: Instead of DOSizeDelta(Vector2), we target just the Height.
+            // This ensures the width (70) never changes, even for a split second.
+            rt.DOSizeDelta(new Vector2(70, data[i]), animationSpeed).SetEase(Ease.OutQuad);
+
+            // Cyberpunk Cyan Highlight
             Highlight(i, Color.cyan);
             AlgorithmAudioGenerator.Instance.PlayPing(data[i], 999f);
+
             yield return new WaitForSeconds(animationSpeed);
+
+            // Optional: Fade back to white for the next EXP pass
+            bars[i].GetComponent<Image>().DOColor(Color.white, animationSpeed);
         }
     }
 
