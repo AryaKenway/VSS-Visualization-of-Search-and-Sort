@@ -3622,7 +3622,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 602373390}
         m_TargetAssemblyTypeName: AndroidTTSAlgorithmInfo, Assembly-CSharp
         m_MethodName: CloseInfo
         m_Mode: 1

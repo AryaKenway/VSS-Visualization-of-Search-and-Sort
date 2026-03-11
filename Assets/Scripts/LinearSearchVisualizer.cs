@@ -16,7 +16,6 @@ public class LinearSearchVisualizer : MonoBehaviour
     private List<GameObject> visualBars = new List<GameObject>();
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
 
-    // --- NEW VARIABLE FOR RESET FUNCTIONALITY ---
     private int[] snapshotData;
 
     void Start()
@@ -32,7 +31,6 @@ public class LinearSearchVisualizer : MonoBehaviour
 
         data = newData;
 
-        // --- TAKE SNAPSHOT ---
         snapshotData = (int[])newData.Clone();
 
         foreach (int val in newData)
@@ -48,13 +46,11 @@ public class LinearSearchVisualizer : MonoBehaviour
         }
     }
 
-    // --- NEW METHOD: RESET TO SNAPSHOT ---
     public void ResetToSnapshot()
     {
         if (snapshotData == null || snapshotData.Length == 0) return;
 
         StopAllCoroutines();
-        // Re-generate using the stored snapshot
         GenerateArray(snapshotData);
 
         Debug.Log("<color=yellow>Linear Search:</color> Reset to snapshot via shake.");

@@ -19,7 +19,6 @@ public class TreeSortVisualizer : MonoBehaviour
     private int sortedIndex = 0;
     private int maxValue;
 
-    // --- NEW VARIABLE FOR RESET FUNCTIONALITY ---
     private List<int> snapshotValues = new List<int>();
 
     class TreeNode
@@ -54,7 +53,6 @@ public class TreeSortVisualizer : MonoBehaviour
                 values.Add(val);
         }
 
-        // --- SNAPSHOT THE VALUES HERE ---
         snapshotValues = new List<int>(values);
 
         maxValue = 0;
@@ -68,8 +66,7 @@ public class TreeSortVisualizer : MonoBehaviour
         }
     }
 
-    // --- NEW METHOD: RESET TO SNAPSHOT ---
-    // This allows the Shake script to bring back the original numbers
+  
     public void ResetToSnapshot()
     {
         if (snapshotValues.Count == 0) return;

@@ -122,7 +122,6 @@ public class AndroidTTSAlgorithmInfo : MonoBehaviour
 
     public void CloseInfo()
     {
-        // Try to stop speech, but don't let a failure here stop the UI from closing
         try
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -137,7 +136,6 @@ public class AndroidTTSAlgorithmInfo : MonoBehaviour
             Debug.LogError("TTS Stop failed: " + e.Message);
         }
 
-        // This line MUST run even if the TTS crashes
         infoPanel.SetActive(false);
     }
 

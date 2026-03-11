@@ -33,7 +33,6 @@ public class TreeSearchVisualizer : MonoBehaviour
     private List<GameObject> allLines = new List<GameObject>();
     private float maxValue = 100f;
 
-    // --- NEW VARIABLE FOR RESET FUNCTIONALITY ---
     private List<int> snapshotValues = new List<int>();
 
     class TreeNode
@@ -73,7 +72,6 @@ public class TreeSearchVisualizer : MonoBehaviour
         }
         values.Sort();
 
-        // --- SNAPSHOT THE VALUES HERE ---
         snapshotValues = new List<int>(values);
 
         maxValue = values[values.Count - 1];
@@ -85,7 +83,6 @@ public class TreeSearchVisualizer : MonoBehaviour
         StartCoroutine(AnimateTreeEntry());
     }
 
-    // --- NEW METHOD: RESET TO SNAPSHOT ---
     public void ResetToSnapshot()
     {
         if (snapshotValues.Count == 0) return;
@@ -93,7 +90,6 @@ public class TreeSearchVisualizer : MonoBehaviour
         StopAllCoroutines();
         ClearTree();
 
-        // Use the snapshot to rebuild the exact same tree
         maxValue = snapshotValues[snapshotValues.Count - 1];
         root = BuildBalancedTree(snapshotValues, 0, snapshotValues.Count - 1);
 

@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Using New Input System
+using UnityEngine.InputSystem; 
 using System.Collections.Generic;
 
 public class ShakeShuffle : MonoBehaviour
@@ -12,7 +12,6 @@ public class ShakeShuffle : MonoBehaviour
 
     void Start()
     {
-        // Enable Accelerometer sensor for Android/iOS
         if (Accelerometer.current != null)
         {
             InputSystem.EnableDevice(Accelerometer.current);
@@ -22,18 +21,15 @@ public class ShakeShuffle : MonoBehaviour
 
     void Update()
     {
-        // 1. Editor Simulation (Spacebar)
         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             HandleReset();
         }
 
-        // 2. Physical Shake Detection
         if (Accelerometer.current != null)
         {
             Vector3 accel = Accelerometer.current.acceleration.ReadValue();
 
-            // Log raw data if force is high for debugging angles
             if (accel.sqrMagnitude > 1.0f && Time.frameCount % 30 == 0)
             {
                 float angle = Mathf.Atan2(accel.y, accel.z) * Mathf.Rad2Deg;
@@ -55,23 +51,18 @@ public class ShakeShuffle : MonoBehaviour
     {
         Debug.Log("<color=orange>[SHAKE DETECTED]</color> Resetting Active Linear Visualizer...");
 
-        // Find Linear Search
         var linear = Object.FindFirstObjectByType<LinearSearchVisualizer>();
         if (linear != null) linear.ResetToSnapshot();
 
-        // Find Jump Search (Assuming class name is JumpSearchVisualizer)
         var jump = Object.FindFirstObjectByType<JumpSearchVisualizer>();
         if (jump != null) jump.ResetToSnapshot();
 
-        // Find Radix Sort (Assuming class name is RadixSortVisualizer)
         var radix = Object.FindFirstObjectByType<RadixSortVisualizer>();
         if (radix != null) radix.ResetToSnapshot();
 
-        // Find Merge Sort (Assuming class name is MergeSortVisualizer)
         var merge = Object.FindFirstObjectByType<MergeSortVisualizer>();
         if (merge != null) merge.ResetToSnapshot();
 
-        // Haptic feedback for Android
 #if UNITY_ANDROID
         Handheld.Vibrate();
 #endif

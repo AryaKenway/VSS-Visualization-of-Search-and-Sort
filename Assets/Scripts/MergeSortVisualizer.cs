@@ -13,8 +13,10 @@ public class MergeSortVisualizer : MonoBehaviour
     private List<GameObject> visualBars = new List<GameObject>();
     private int[] data;
 
-    // --- NEW: Stores the original unsorted state ---
     private int[] snapshotData;
+
+    private Vector3[] snapshotScales;
+    private Vector2[] snapshotSizes;
 
     void Start()
     {
@@ -43,31 +45,40 @@ public class MergeSortVisualizer : MonoBehaviour
             visualBars.Add(newBar);
         }
 
-        // --- TAKE SNAPSHOT ---
         snapshotData = (int[])data.Clone();
+
+        snapshotScales = new Vector3[visualBars.Count];
+        snapshotSizes = new Vector2[visualBars.Count];
+
+        for (int i = 0; i < visualBars.Count; i++)
+        {
+            RectTransform rt = visualBars[i].GetComponent<RectTransform>();
+
+            snapshotScales[i] = visualBars[i].transform.localScale;
+            snapshotSizes[i] = rt.sizeDelta;
+        }
 
         AlgorithmMetrics.Instance.StopTracking();
     }
 
-    // --- NEW METHOD: RESET TO SNAPSHOT ---
     public void ResetToSnapshot()
     {
         if (snapshotData == null) return;
 
         StopAllCoroutines();
 
-        // Restore the data array
         data = (int[])snapshotData.Clone();
 
-        // Revert visuals back to original state
         for (int i = 0; i < visualBars.Count; i++)
         {
             visualBars[i].GetComponent<Image>().color = Color.white;
             visualBars[i].GetComponentInChildren<TMP_Text>().text = data[i].ToString();
 
             RectTransform rt = visualBars[i].GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(60, data[i] * 2.0f);
-            visualBars[i].transform.localScale = Vector3.one;
+
+            rt.sizeDelta = snapshotSizes[i];
+
+            visualBars[i].transform.localScale = snapshotScales[i];
         }
 
         Debug.Log("<color=green>Merge Sort:</color> Reset to unsorted snapshot.");
