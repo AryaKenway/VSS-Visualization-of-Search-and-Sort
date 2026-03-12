@@ -1,35 +1,21 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class AppNavigation : MonoBehaviour
 {
-    [Header("Panels")]
-    public GameObject mainMenuPanel;
-    public GameObject sortingPanel;
-    public GameObject searchingPanel;
+    public static AppNavigation Instance;
 
-
-    public void ShowSortingAlgorithms()
+    void Awake()
     {
-        mainMenuPanel.SetActive(false);
-        searchingPanel.SetActive(false);
-        sortingPanel.SetActive(true);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
-
-    public void ShowSearchingAlgorithms()
-    {
-        mainMenuPanel.SetActive(false);
-        sortingPanel.SetActive(false);
-        searchingPanel.SetActive(true);
-    }
-
-    public void BackToTitle()
-    {
-        sortingPanel.SetActive(false);
-        searchingPanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
-    }
-
 
     public void LoadMergeSort()
     {
@@ -46,7 +32,6 @@ public class AppNavigation : MonoBehaviour
         PixelSceneTransition.Instance.TransitionToScene("RadixSort");
     }
 
-
     public void LoadLinearSearch()
     {
         PixelSceneTransition.Instance.TransitionToScene("LinearSearchScene");
@@ -61,8 +46,15 @@ public class AppNavigation : MonoBehaviour
     {
         PixelSceneTransition.Instance.TransitionToScene("JumpSearch");
     }
+
     public void LoadMainMenu()
     {
         PixelSceneTransition.Instance.TransitionToScene("MainMenu");
+    }
+
+    public static void GoToMainMenu()
+    {
+        if (Instance != null)
+            Instance.LoadMainMenu();
     }
 }

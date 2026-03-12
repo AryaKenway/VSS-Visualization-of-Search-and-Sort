@@ -188,7 +188,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 127883408}
   - component: {fileID: 127883407}
   - component: {fileID: 127883406}
+  - component: {fileID: 127883409}
   m_Layer: 5
   m_Name: Search
   m_TagString: Untagged
@@ -421,7 +422,7 @@ RectTransform:
   m_GameObject: {fileID: 127883404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 770533666}
@@ -508,7 +509,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7158278906341884272, guid: 4ad41d31660704f4db7136f2e82b5e8a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a0048f8d0b6035f45a4e642235fd6ddc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -526,6 +527,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127883404}
   m_CullTransparentMesh: 1
+--- !u!114 &127883409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127883404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66e4e08a5abf00439c7e136ef3fcf88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SSButton
+  targetImage: {fileID: 0}
+  sceneColorA: {r: 0, g: 1, b: 1, a: 1}
+  sceneColorB: {r: 0.506131, g: 0.93487877, b: 0.98742133, a: 1}
+  transitionSpeed: 0.2
+  glowStrength: 1.02
 --- !u!1 &129432402
 GameObject:
   m_ObjectHideFlags: 0
@@ -827,7 +845,7 @@ RectTransform:
   m_GameObject: {fileID: 405424367}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1008097180}
@@ -866,8 +884,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1376,7 +1394,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 602373388}
-  - component: {fileID: 602373387}
   - component: {fileID: 602373389}
   - component: {fileID: 602373390}
   - component: {fileID: 602373391}
@@ -1387,21 +1404,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &602373387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 602373386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39f6bb7fa3ce3e14ea44bfe0d81fbf0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AppNavigation
-  mainMenuPanel: {fileID: 0}
-  sortingPanel: {fileID: 0}
-  searchingPanel: {fileID: 0}
 --- !u!4 &602373388
 Transform:
   m_ObjectHideFlags: 0
@@ -1598,6 +1600,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651277811}
   m_CullTransparentMesh: 1
+--- !u!1 &692333162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 692333164}
+  - component: {fileID: 692333163}
+  m_Layer: 0
+  m_Name: App Navigation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &692333163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692333162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39f6bb7fa3ce3e14ea44bfe0d81fbf0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AppNavigation
+  mainMenuPanel: {fileID: 0}
+  sortingPanel: {fileID: 0}
+  searchingPanel: {fileID: 0}
+--- !u!4 &692333164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692333162}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 270.63132, y: 2207.732, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &763467624
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,7 +1755,7 @@ RectTransform:
   m_GameObject: {fileID: 770533665}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 127883405}
@@ -1747,8 +1796,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1932,7 +1981,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7158278906341884272, guid: 4ad41d31660704f4db7136f2e82b5e8a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a0048f8d0b6035f45a4e642235fd6ddc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2098,6 +2147,7 @@ GameObject:
   - component: {fileID: 809777379}
   - component: {fileID: 809777378}
   - component: {fileID: 809777377}
+  - component: {fileID: 809777380}
   m_Layer: 5
   m_Name: Info
   m_TagString: Untagged
@@ -2114,7 +2164,7 @@ RectTransform:
   m_GameObject: {fileID: 809777375}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 974765451}
@@ -2201,7 +2251,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7158278906341884272, guid: 4ad41d31660704f4db7136f2e82b5e8a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a0048f8d0b6035f45a4e642235fd6ddc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2219,6 +2269,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 809777375}
   m_CullTransparentMesh: 1
+--- !u!114 &809777380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809777375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66e4e08a5abf00439c7e136ef3fcf88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SSButton
+  targetImage: {fileID: 0}
+  sceneColorA: {r: 0, g: 1, b: 1, a: 1}
+  sceneColorB: {r: 0.1, g: 0.9, b: 1, a: 1}
+  transitionSpeed: 0.2
+  glowStrength: 1.02
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2356,7 +2423,7 @@ RectTransform:
   m_GameObject: {fileID: 974765450}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 809777376}
@@ -2397,8 +2464,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2479,6 +2546,7 @@ GameObject:
   - component: {fileID: 1008097183}
   - component: {fileID: 1008097182}
   - component: {fileID: 1008097181}
+  - component: {fileID: 1008097184}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -2495,7 +2563,7 @@ RectTransform:
   m_GameObject: {fileID: 1008097179}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 405424368}
@@ -2550,9 +2618,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 602373387}
+      - m_Target: {fileID: 692333163}
         m_TargetAssemblyTypeName: AppNavigation, Assembly-CSharp
-        m_MethodName: LoadMainMenu
+        m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2582,7 +2650,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7152754939866684609, guid: 9561cb0a279d35c44b64069e72fdee75, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a0048f8d0b6035f45a4e642235fd6ddc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2600,6 +2668,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1008097179}
   m_CullTransparentMesh: 1
+--- !u!114 &1008097184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008097179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66e4e08a5abf00439c7e136ef3fcf88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SSButton
+  targetImage: {fileID: 0}
+  sceneColorA: {r: 0, g: 1, b: 1, a: 1}
+  sceneColorB: {r: 0.1, g: 0.9, b: 1, a: 1}
+  transitionSpeed: 0.2
+  glowStrength: 1.02
 --- !u!1 &1166527334
 GameObject:
   m_ObjectHideFlags: 0
@@ -2612,6 +2697,7 @@ GameObject:
   - component: {fileID: 1166527338}
   - component: {fileID: 1166527337}
   - component: {fileID: 1166527336}
+  - component: {fileID: 1166527339}
   m_Layer: 5
   m_Name: Randomize
   m_TagString: Untagged
@@ -2628,7 +2714,7 @@ RectTransform:
   m_GameObject: {fileID: 1166527334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1694920393}
@@ -2715,7 +2801,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7158278906341884272, guid: 4ad41d31660704f4db7136f2e82b5e8a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a0048f8d0b6035f45a4e642235fd6ddc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2733,6 +2819,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1166527334}
   m_CullTransparentMesh: 1
+--- !u!114 &1166527339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166527334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66e4e08a5abf00439c7e136ef3fcf88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SSButton
+  targetImage: {fileID: 0}
+  sceneColorA: {r: 0, g: 1, b: 1, a: 1}
+  sceneColorB: {r: 0.1, g: 0.9, b: 1, a: 1}
+  transitionSpeed: 0.2
+  glowStrength: 1.02
 --- !u!1 &1238414393
 GameObject:
   m_ObjectHideFlags: 0
@@ -3346,7 +3449,7 @@ RectTransform:
   m_GameObject: {fileID: 1694920392}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1166527335}
@@ -3385,8 +3488,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3841,3 +3944,4 @@ SceneRoots:
   - {fileID: 468127430}
   - {fileID: 592313036}
   - {fileID: 602373388}
+  - {fileID: 692333164}
